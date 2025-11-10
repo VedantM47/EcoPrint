@@ -1,8 +1,10 @@
-import React from "react";
-import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import { ThemeContext } from "styled-components";
+"use client"
+
+import React from "react"
+import styled from "styled-components"
+import { Link, useNavigate } from "react-router-dom"
+import { motion } from "framer-motion"
+import { ThemeContext } from "styled-components"
 
 const Bar = styled.header`
   position: fixed;
@@ -16,124 +18,112 @@ const Bar = styled.header`
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
-  background: ${(p) => p.theme.surface};
+  background: linear-gradient(135deg, ${(p) => p.theme.surface}, rgba(255, 255, 255, 0.9));
   border-radius: 14px;
   box-shadow: ${(p) => p.theme.cardShadow};
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(10px);
+  border: 1px solid ${(p) => p.theme.borderColor};
   z-index: 60;
-`;
+`
 
 const Left = styled.div`
   display: flex;
   align-items: center;
-  gap: 16px;
-`;
+  gap: 20px;
+`
+
 const Logo = styled(Link)`
   display: flex;
   align-items: center;
   gap: 10px;
   font-weight: 700;
   color: ${(p) => p.theme.text};
-`;
+  transition: transform 0.2s ease;
+  
+  &:hover {
+    transform: scale(1.02);
+  }
+`
+
 const Nav = styled.nav`
   display: flex;
-  gap: 12px;
+  gap: 6px;
   align-items: center;
-`;
+`
+
 const NavLink = styled(Link)`
   color: ${(p) => p.theme.text};
-  opacity: 0.86;
-  padding: 8px 10px;
-  border-radius: 10px;
+  opacity: 0.85;
+  padding: 8px 12px;
+  border-radius: 8px;
   font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  
   &:hover {
-    background: rgba(74, 144, 226, 0.08);
-    transform: translateY(-2px);
-    transition: var(--transition);
+    background: rgba(27, 94, 63, 0.08);
+    opacity: 1;
+    transform: translateY(-1px);
   }
-`;
+`
 
 const Right = styled.div`
   display: flex;
   gap: 12px;
   align-items: center;
-`;
+`
 
 const UserBadge = styled.div`
-  padding: 8px 12px;
+  padding: 8px 14px;
   border-radius: 999px;
-  background: linear-gradient(
-    90deg,
-    rgba(74, 144, 226, 0.08),
-    rgba(123, 97, 255, 0.06)
-  );
+  background: linear-gradient(135deg, rgba(45, 157, 123, 0.1), rgba(27, 94, 63, 0.06));
   color: ${(p) => p.theme.text};
   font-weight: 700;
-`;
+  font-size: 13px;
+  border: 1px solid rgba(27, 94, 63, 0.12);
+`
 
 const IconButton = styled.button`
   background: transparent;
   border: none;
   padding: 8px;
-  border-radius: 10px;
+  border-radius: 8px;
   cursor: pointer;
   color: ${(p) => p.theme.text};
+  transition: all 0.2s ease;
+  
   &:hover {
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(27, 94, 63, 0.08);
     transform: translateY(-2px);
   }
-`;
+`
 
 export default function Header({ user }) {
-  const navigate = useNavigate();
-  // Use the exported ThemeContext (don't use require in the browser)
-  const theme = React.useContext(ThemeContext);
+  const navigate = useNavigate()
+  const theme = React.useContext(ThemeContext)
 
   function logout() {
-    localStorage.removeItem("sc_user");
-    navigate("/onboarding");
+    localStorage.removeItem("sc_user")
+    navigate("/onboarding")
   }
 
   function toggleTheme() {
-    // toggleTheme was injected into theme object in main Root's ThemeProvider
-    if (theme && typeof theme.toggleTheme === "function") theme.toggleTheme();
+    if (theme && typeof theme.toggleTheme === "function") theme.toggleTheme()
   }
 
-  const displayName = user?.name
-    ? user.name.split(" ").slice(0, 2).join(" ")
-    : "User";
+  const displayName = user?.name ? user.name.split(" ").slice(0, 2).join(" ") : "User"
 
   return (
-    <Bar
-      as={motion.header}
-      initial={{ y: -6, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-    >
+    <Bar as={motion.header} initial={{ y: -6, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
       <Left>
         <Logo to="/dashboard">
-          <svg
-            width="36"
-            height="36"
-            viewBox="0 0 24 24"
-            fill="none"
-            aria-hidden
-          >
-            <rect x="1" y="1" width="22" height="22" rx="6" fill="#4A90E2" />
-            <path
-              d="M6 12h12"
-              stroke="white"
-              strokeWidth="1.6"
-              strokeLinecap="round"
-            />
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <rect x="1" y="1" width="22" height="22" rx="6" fill="#1B5E3F" />
+            <path d="M8 12h8M12 8v8" stroke="white" strokeWidth="1.8" strokeLinecap="round" />
           </svg>
-          <div
-            style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}
-          >
-            <span style={{ fontSize: 14 }}>SplitCOI</span>
-            <span style={{ fontSize: 11, color: theme?.muted }}>
-              {/* theme.muted used here */}Split Carbon & Cost
-            </span>
+          <div style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
+            <span style={{ fontSize: 14, fontWeight: 700 }}>SplitCOI</span>
+            <span style={{ fontSize: 10, color: theme?.muted, fontWeight: 500 }}>Split Carbon & Cost</span>
           </div>
         </Logo>
 
@@ -144,30 +134,29 @@ export default function Header({ user }) {
       </Left>
 
       <Right>
-        <IconButton
-          title="Toggle theme"
-          onClick={toggleTheme}
-          aria-label="Toggle theme"
-        >
+        <IconButton title="Toggle theme" onClick={toggleTheme} aria-label="Toggle theme">
           {theme && theme.bg === "#F9FAFB" ? (
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"
-                fill="#2E2E2E"
-              />
+              <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" fill="#1B5E3F" />
             </svg>
           ) : (
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="5" fill="#fff" />
+              <circle cx="12" cy="12" r="5" fill="#F5F5F5" />
+              <path
+                d="M12 1v6m0 6v6M23 12h-6m-6 0H1M20.5 3.5l-4.24 4.24m-8.52 8.52L3.5 20.5M3.5 3.5l4.24 4.24m8.52 8.52L20.5 20.5"
+                stroke="#F5F5F5"
+                strokeWidth="1.2"
+                strokeLinecap="round"
+              />
             </svg>
           )}
         </IconButton>
 
         <UserBadge>Hi, {displayName}</UserBadge>
-        <IconButton onClick={logout} title="Logout">
+        <IconButton onClick={logout} title="Logout" style={{ fontWeight: 700, fontSize: 13 }}>
           Logout
         </IconButton>
       </Right>
     </Bar>
-  );
+  )
 }
