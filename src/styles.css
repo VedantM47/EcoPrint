@@ -1,0 +1,504 @@
+:root {
+  --bg-1: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  --surface: #ffffff;
+  --muted: #6b7280;
+  --primary: #0ea5e9;
+  /* cyan */
+  --primary-600: #0891b2;
+  --accent: #7c3aed;
+  /* purple */
+  --success: #10b981;
+  /* green */
+  --glass: rgba(255, 255, 255, 0.6);
+  --card-shadow: 0 8px 30px rgba(12, 18, 28, 0.06);
+  --rounded: 12px;
+  --glass-border: rgba(16, 24, 40, 0.06);
+  --max-width: 1100px;
+  --text: #0b1220;
+}
+
+/* Reset & base */
+* {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color: var(--text);
+  background: var(--bg-1);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.45;
+}
+
+/* App container */
+.container {
+  max-width: var(--max-width);
+  margin: 28px auto;
+  padding: 0 20px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-radius: 14px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.55));
+  box-shadow: var(--card-shadow);
+  backdrop-filter: blur(6px);
+  margin-bottom: 18px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand strong {
+  font-family: "Poppins", "Inter", sans-serif;
+  font-size: 20px;
+  color: var(--text);
+  letter-spacing: 0.2px;
+}
+
+.tagline {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* Nav */
+.header nav {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.link {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--primary-600);
+  padding: 8px 10px;
+  border-radius: 8px;
+}
+
+.link:hover {
+  background: rgba(14, 165, 233, 0.08);
+}
+
+/* User badge */
+.user {
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #eefcff, #e6f8ff);
+  border: 1px solid rgba(14, 165, 233, 0.08);
+  font-weight: 600;
+  color: var(--primary-600);
+}
+
+/* Cards and layout */
+.app .card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.9));
+  padding: 18px;
+  border-radius: var(--rounded);
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--glass-border);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+@media (max-width:900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card.wide {
+  grid-column: 1 / -1;
+}
+
+/* Headings */
+.card h3 {
+  margin: 0 0 10px;
+  font-size: 16px;
+  letter-spacing: 0.2px;
+  color: #071130;
+}
+
+/* Forms */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  color: #334155;
+}
+
+.form input,
+.form select,
+.form textarea {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #e6edf7;
+  outline: none;
+  background: rgba(255, 255, 255, 0.9);
+  transition: all 0.18s ease;
+  font-size: 14px;
+  color: var(--text);
+  box-shadow: 0 1px 0 rgba(12, 18, 28, 0.02) inset;
+}
+
+.form input:focus,
+.form select:focus,
+.form textarea:focus {
+  border-color: rgba(14, 165, 233, 0.35);
+  box-shadow: 0 6px 22px rgba(14, 165, 233, 0.06);
+}
+
+/* Inline form small */
+.form-inline {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.form-inline input {
+  min-width: 150px;
+}
+
+/* Actions / Buttons */
+.actions {
+  margin-top: 6px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+button.primary {
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.12);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+
+button.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 40px rgba(124, 58, 237, 0.14);
+}
+
+button.small {
+  background: transparent;
+  border: 1px solid #eef2ff;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--primary-600)
+}
+
+button.link {
+  background: none;
+  border: none;
+  color: var(--primary-600);
+  cursor: pointer;
+  padding: 6px 8px;
+}
+
+/* Row helper */
+.row {
+  display: flex;
+  gap: 8px;
+}
+
+/* Summary card specifics */
+.summary-metric {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.summary-metric .big {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.summary-metric .muted {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* Progress meter */
+.progress label {
+  font-size: 13px;
+  color: #334155;
+}
+
+.progress .meter {
+  height: 12px;
+  background: linear-gradient(90deg, #eef2ff, #f1f5f9);
+  border-radius: 999px;
+  margin-top: 8px;
+  overflow: hidden;
+  border: 1px solid #eef2ff;
+}
+
+.progress .meter>div {
+  height: 100%;
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.15), rgba(14, 165, 233, 0.15)), linear-gradient(90deg, var(--success), var(--primary));
+  width: 40%;
+  border-radius: 999px;
+  box-shadow: 0 6px 18px rgba(14, 165, 233, 0.08);
+  transition: width 600ms cubic-bezier(.2, .9, .3, 1);
+}
+
+/* Recommendations */
+.recommendations {
+  margin-top: 12px;
+}
+
+.recommendations ul {
+  margin: 0;
+  padding-left: 16px;
+}
+
+.recommendations li {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+/* Charts container */
+.chart-box {
+  width: 100%;
+  height: 220px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.4));
+  border-radius: 10px;
+  padding: 8px;
+}
+
+/* Table */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+.table th,
+.table td {
+  padding: 12px 8px;
+  text-align: left;
+  border-bottom: 1px solid #f0f3f7;
+  vertical-align: middle;
+}
+
+.table th {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+/* Muted small text */
+.muted {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* Split cards */
+.split-card {
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px dashed #eef2ff;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.88));
+  margin-bottom: 8px;
+}
+
+.split-card strong {
+  display: block;
+  font-weight: 700;
+  color: #0b1220;
+  margin-bottom: 6px;
+}
+
+.actions-inline {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* Bill scanner */
+input[type="file"] {
+  padding: 8px 6px;
+  border-radius: 8px;
+  background: transparent;
+}
+
+/* Recent activities list */
+.recent-activity {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  padding: 10px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(250, 250, 255, 0.9), rgba(245, 247, 250, 0.8));
+  border: 1px solid #f1f5f9;
+}
+
+.recent-activity+.recent-activity {
+  margin-top: 8px;
+}
+
+/* Small helpers */
+.small-badge {
+  display: inline-block;
+  padding: 6px 8px;
+  font-size: 12px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: var(--primary-600);
+  font-weight: 700;
+}
+
+/* Footer spacing for large screens */
+@media (min-width:1100px) {
+  .container {
+    padding: 0 24px;
+  }
+}
+
+/* Micro-animations */
+@keyframes floatUp {
+  from {
+    transform: translateY(6px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.card {
+  animation: floatUp 420ms ease both;
+}
+
+/* Misc polish for inputs and selects inside small forms */
+.form input[placeholder],
+.form select {
+  color: #0b1220;
+  opacity: 0.92;
+}
+
+/* Ensure charts & responsive containers look tidy */
+.recharts-wrapper {
+  border-radius: 10px;
+  overflow: hidden;
+}
+/* Add these styles to your existing src/styles.css (you can append them) */
+
+.btn-delete {
+  background: linear-gradient(90deg, rgba(239, 68, 68, 0.06), rgba(239, 68, 68, 0.02));
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.08);
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+}
+
+.btn-delete:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(239, 68, 68, 0.08);
+  background: rgba(239, 68, 68, 0.06);
+}
+/* Keep this file for legacy button classes and small helpers. Append to it or leave as-is. */
+
+.primary {
+  background: linear-gradient(90deg, #4A90E2, #7B61FF);
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+  box-shadow: 0 8px 28px rgba(74, 144, 226, 0.12);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+
+.primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 48px rgba(74, 144, 226, 0.12);
+}
+
+.small {
+  background: transparent;
+  color: #4A90E2;
+  border: 1px solid rgba(74, 144, 226, 0.06);
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.link {
+  background: none;
+  border: none;
+  color: #4A90E2;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.btn-delete {
+  background: linear-gradient(90deg, rgba(239, 68, 68, 0.06), rgba(239, 68, 68, 0.02));
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.08);
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.btn-delete:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(239, 68, 68, 0.08);
+  background: rgba(239, 68, 68, 0.06);
+}
+
+/* small responsive tweaks */
+@media (max-width: 900px) {
+  .container {
+    padding: 20px;
+  }
+}
