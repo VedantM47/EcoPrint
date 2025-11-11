@@ -2,6 +2,23 @@
 
 import { useMemo } from "react";
 import styled from "styled-components";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  LineChart,
+  Line,
+  Area,
+  AreaChart,
+} from "recharts";
 
 const Container = styled.div`
   display: flex;
@@ -36,114 +53,35 @@ const Card = styled.div`
   }
 `;
 
-const ChartContainer = styled.div`
-  width: 100%;
-  height: 200px;
+const StatCard = styled.div`
+  padding: 16px;
+  border-radius: 10px;
+  background: linear-gradient(
+    135deg,
+    ${(p) => p.gradient || "rgba(45, 157, 123, 0.1), rgba(27, 94, 63, 0.05)"}
+  );
+  border: 1px solid ${(p) => p.borderColor || "rgba(45, 157, 123, 0.2)"};
   display: flex;
-  align-items: flex-end;
-  justify-content: space-around;
-  gap: 8px;
-`;
-
-const Bar = styled.div`
-  flex: 1;
-  background: linear-gradient(180deg, #2d9d7b, #1b5e3f);
-  border-radius: 6px 6px 0 0;
-  position: relative;
-  transition: all 0.3s ease;
-  cursor: pointer;
-
-  &:hover {
-    opacity: 0.8;
-    box-shadow: 0 0 12px rgba(45, 157, 123, 0.3);
-  }
+  flex-direction: column;
+  gap: 4px;
 
   .label {
-    position: absolute;
-    bottom: -24px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
     color: ${(p) => p.theme.muted};
-    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
 
   .value {
-    position: absolute;
-    top: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 12px;
-    font-weight: 700;
-    color: white;
-    text-align: center;
-  }
-`;
-
-const PieChart = styled.div`
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  position: relative;
-  margin: 0 auto;
-  background: conic-gradient(${(p) => p.gradient});
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const PieCenter = styled.div`
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-
-  .center-value {
-    font-size: 18px;
+    font-size: 24px;
     font-weight: 800;
-    color: ${(p) => p.theme.text};
+    color: ${(p) => p.valueColor || p.theme.text};
   }
 
-  .center-label {
+  .subtext {
     font-size: 11px;
     color: ${(p) => p.theme.muted};
-    margin-top: 2px;
-  }
-`;
-
-const Legend = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 12px;
-`;
-
-const LegendItem = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-
-  .color-box {
-    width: 12px;
-    height: 12px;
-    border-radius: 3px;
-    background: ${(p) => p.color};
-  }
-
-  .label {
-    flex: 1;
-    color: ${(p) => p.theme.muted};
-  }
-
-  .value {
-    font-weight: 700;
-    color: ${(p) => p.theme.text};
   }
 `;
 
@@ -217,11 +155,42 @@ const RankingItem = styled.div`
   }
 `;
 
+const CustomTooltip = ({ active, payload, label }) => {
+  if (!active || !payload || !payload.length) return null;
+
+  return (
+    <div
+      style={{
+        background: "white",
+        padding: "8px 12px",
+        border: "1px solid rgba(0,0,0,0.1)",
+        borderRadius: "8px",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+      }}
+    >
+      <p style={{ margin: 0, fontWeight: 700, fontSize: 12 }}>{label}</p>
+      {payload.map((entry, index) => (
+        <p
+          key={index}
+          style={{
+            margin: "4px 0 0",
+            color: entry.color,
+            fontSize: 11,
+            fontWeight: 600,
+          }}
+        >
+          {entry.name}: {entry.value.toFixed(2)}
+        </p>
+      ))}
+    </div>
+  );
+};
+
 export default function GroupAnalytics({ group }) {
   const analytics = useMemo(() => {
     if (!group?.expenses) return null;
 
-    // Category breakdown (simulate based on activity titles)
+    // Category breakdown
     const categories = {};
     let total = 0;
 
@@ -265,6 +234,21 @@ export default function GroupAnalytics({ group }) {
       }))
       .sort((a, b) => b.emissions - a.emissions);
 
+    // Trend analysis for emissions over time
+    const expensesByDate = {};
+    group.expenses.forEach((exp) => {
+      const date = exp.created_at
+        ? new Date(exp.created_at).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+          })
+        : "Today";
+      expensesByDate[date] = expensesByDate[date] || { date, co2: 0, cost: 0 };
+      expensesByDate[date].co2 += exp.co2 || 0;
+      expensesByDate[date].cost += exp.cost || 0;
+    });
+    const trendData = Object.values(expensesByDate);
+
     // Top 3 high emitters
     const top3 = memberRankings.slice(0, 3);
 
@@ -273,7 +257,7 @@ export default function GroupAnalytics({ group }) {
     const avgEmissions = total / group.members.length;
     const highestEmitter = memberRankings[0];
 
-    if (highestEmitter) {
+    if (highestEmitter && highestEmitter.emissions > 0) {
       const ratio = (
         ((highestEmitter.emissions - avgEmissions) / avgEmissions) *
         100
@@ -291,6 +275,20 @@ export default function GroupAnalytics({ group }) {
       `The group spends ₹${avgCostPerKg.toFixed(2)} per kg of CO₂ on average.`
     );
 
+    // Top category insight
+    const topCategory = Object.entries(categories).sort(
+      ([, a], [, b]) => b - a
+    )[0];
+    if (topCategory) {
+      const pct = ((topCategory[1] / total) * 100).toFixed(0);
+      insights.push(
+        `${topCategory[0]} accounts for ${pct}% of total emissions.`
+      );
+    }
+
+    // Efficiency score
+    const efficiencyScore = Math.max(0, 100 - total * 2).toFixed(0);
+
     return {
       categories,
       total,
@@ -298,6 +296,8 @@ export default function GroupAnalytics({ group }) {
       top3,
       insights,
       avgEmissions,
+      trendData,
+      efficiencyScore,
     };
   }, [group]);
 
@@ -311,81 +311,167 @@ export default function GroupAnalytics({ group }) {
     Other: "#8B5CF6",
   };
 
-  const categoryEntries = Object.entries(analytics.categories);
-  const pieGradient = categoryEntries
-    .map(([cat, val]) => {
-      const pct = (val / analytics.total) * 100;
-      return `${categoryColors[cat]} 0% ${pct}%`;
+  const categoryData = Object.entries(analytics.categories).map(
+    ([name, value]) => ({
+      name,
+      value: Number.parseFloat(value.toFixed(2)),
+      percentage: ((value / analytics.total) * 100).toFixed(1),
     })
-    .join(", ");
+  );
+
+  const memberData = analytics.memberRankings.map((m) => ({
+    name: m.name.split(" ")[0],
+    emissions: Number.parseFloat(m.emissions.toFixed(2)),
+    cost: Number.parseFloat(m.cost.toFixed(2)),
+  }));
 
   return (
     <Container>
-      {/* Member Emissions Bar Chart */}
+      {/* Summary stats cards */}
+      <AnalyticsGrid>
+        <StatCard
+          gradient="rgba(45, 157, 123, 0.1), rgba(27, 94, 63, 0.05)"
+          borderColor="rgba(45, 157, 123, 0.2)"
+          valueColor="#1b5e3f"
+        >
+          <div className="label">Total Emissions</div>
+          <div className="value">{analytics.total.toFixed(1)} kg</div>
+          <div className="subtext">
+            {(analytics.total / group.members.length).toFixed(1)} kg per member
+          </div>
+        </StatCard>
+
+        <StatCard
+          gradient="rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05)"
+          borderColor="rgba(59, 130, 246, 0.2)"
+          valueColor="#1e40af"
+        >
+          <div className="label">Total Cost</div>
+          <div className="value">₹{group.totals.totalCost.toFixed(0)}</div>
+          <div className="subtext">
+            ₹{(group.totals.totalCost / group.members.length).toFixed(0)} per
+            member
+          </div>
+        </StatCard>
+
+        <StatCard
+          gradient="rgba(236, 72, 153, 0.1), rgba(219, 39, 119, 0.05)"
+          borderColor="rgba(236, 72, 153, 0.2)"
+          valueColor="#be185d"
+        >
+          <div className="label">Efficiency Score</div>
+          <div className="value">{analytics.efficiencyScore}%</div>
+          <div className="subtext">
+            {analytics.efficiencyScore > 70
+              ? "Excellent"
+              : analytics.efficiencyScore > 50
+              ? "Good"
+              : "Needs improvement"}
+          </div>
+        </StatCard>
+      </AnalyticsGrid>
+
       <Card>
         <h4>Member Emissions Comparison</h4>
-        <ChartContainer style={{ paddingBottom: 24 }}>
-          {group.members.map((member, i) => {
-            const emissions = group.perMember?.[i]?.shareCO2 || 0;
-            const maxEmissions = Math.max(
-              ...group.members.map(
-                (_, j) => group.perMember?.[j]?.shareCO2 || 0
-              ),
-              0.01
-            );
-            const height = (emissions / maxEmissions) * 150;
-
-            return (
-              <div
-                key={member}
-                style={{
-                  flex: 1,
-                  position: "relative",
-                  display: "flex",
-                  alignItems: "flex-end",
-                }}
-              >
-                <Bar style={{ height: `${height}px` }}>
-                  <div className="value">{emissions.toFixed(1)}</div>
-                  <div className="label">{member.split(" ")[0]}</div>
-                </Bar>
-              </div>
-            );
-          })}
-        </ChartContainer>
+        <ResponsiveContainer width="100%" height={250}>
+          <BarChart data={memberData}>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.05)" />
+            <XAxis dataKey="name" fontSize={12} />
+            <YAxis fontSize={12} />
+            <Tooltip content={<CustomTooltip />} />
+            <Legend fontSize={12} />
+            <Bar
+              dataKey="emissions"
+              fill="#2D9D7B"
+              name="CO₂ (kg)"
+              radius={[8, 8, 0, 0]}
+            />
+          </BarChart>
+        </ResponsiveContainer>
       </Card>
 
-      {/* Category Breakdown */}
       <Card>
         <h4>Emissions by Category</h4>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <PieChart gradient={pieGradient}>
-            <PieCenter>
-              <div className="center-value">{analytics.total.toFixed(1)}</div>
-              <div className="center-label">kg CO₂</div>
-            </PieCenter>
+        <ResponsiveContainer width="100%" height={300}>
+          <PieChart>
+            <Pie
+              data={categoryData}
+              cx="50%"
+              cy="50%"
+              labelLine={false}
+              label={({ name, percentage }) => `${name} ${percentage}%`}
+              outerRadius={100}
+              fill="#8884d8"
+              dataKey="value"
+            >
+              {categoryData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={categoryColors[entry.name]} />
+              ))}
+            </Pie>
+            <Tooltip content={<CustomTooltip />} />
           </PieChart>
-
-          <Legend>
-            {categoryEntries.map(([category, value]) => (
-              <LegendItem key={category} color={categoryColors[category]}>
-                <div className="color-box" />
-                <div className="label">{category}</div>
-                <div className="value">
-                  {((value / analytics.total) * 100).toFixed(0)}%
-                </div>
-              </LegendItem>
-            ))}
-          </Legend>
-        </div>
+        </ResponsiveContainer>
       </Card>
+
+      {analytics.trendData.length > 1 && (
+        <Card>
+          <h4>Emissions Trend</h4>
+          <ResponsiveContainer width="100%" height={250}>
+            <AreaChart data={analytics.trendData}>
+              <defs>
+                <linearGradient id="colorCo2" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#2D9D7B" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#2D9D7B" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.05)" />
+              <XAxis dataKey="date" fontSize={12} />
+              <YAxis fontSize={12} />
+              <Tooltip content={<CustomTooltip />} />
+              <Area
+                type="monotone"
+                dataKey="co2"
+                stroke="#2D9D7B"
+                strokeWidth={2}
+                fillOpacity={1}
+                fill="url(#colorCo2)"
+                name="CO₂ (kg)"
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </Card>
+      )}
+
+      <Card>
+        <h4>Cost vs Emissions</h4>
+        <ResponsiveContainer width="100%" height={250}>
+          <LineChart data={memberData}>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.05)" />
+            <XAxis dataKey="name" fontSize={12} />
+            <YAxis fontSize={12} />
+            <Tooltip content={<CustomTooltip />} />
+            <Legend fontSize={12} />
+            <Line
+              type="monotone"
+              dataKey="emissions"
+              stroke="#2D9D7B"
+              strokeWidth={2}
+              name="CO₂ (kg)"
+            />
+            <Line
+              type="monotone"
+              dataKey="cost"
+              stroke="#3B82F6"
+              strokeWidth={2}
+              name="Cost (₹)"
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </Card>
+
+      {/* Member Emissions Bar Chart */}
+
+      {/* Category Breakdown */}
 
       {/* Top 3 Emitters */}
       <Card style={{ gridColumn: "1 / -1" }}>
@@ -408,7 +494,12 @@ export default function GroupAnalytics({ group }) {
         <Card style={{ gridColumn: "1 / -1" }}>
           <h4>Key Insights</h4>
           {analytics.insights.map((insight, idx) => (
-            <InsightBox key={idx}>
+            <InsightBox
+              key={idx}
+              style={{
+                marginBottom: idx < analytics.insights.length - 1 ? 8 : 0,
+              }}
+            >
               <div className="insight-title">Insight {idx + 1}</div>
               {insight}
             </InsightBox>

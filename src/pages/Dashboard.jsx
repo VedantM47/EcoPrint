@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+"use client";
+
+import { useEffect, useState } from "react";
 import ActivityModal from "../components/ActivityModal";
 import BillScanner from "../components/BillScanner";
-import SplitCOI from "../components/SplitCOI";
 import {
   AreaChart,
   Area,
@@ -95,15 +96,26 @@ function sampleChartData(activities) {
     .map((item) => ({ ...item, day: formatDateLabel(item.dateKey) }));
 }
 
-export default function Dashboard() {
+export default function Dashboard({ onCelebrate }) {
   const [activities, setActivities] = useState(() =>
     JSON.parse(localStorage.getItem("sc_activities") || "[]")
   );
   const [openModal, setOpenModal] = useState(false);
+  const [groups, setGroups] = useState(() =>
+    JSON.parse(localStorage.getItem("sc_groups") || "[]")
+  );
 
   useEffect(() => {
     localStorage.setItem("sc_activities", JSON.stringify(activities));
   }, [activities]);
+
+  useEffect(() => {
+    const onStorage = () => {
+      setGroups(JSON.parse(localStorage.getItem("sc_groups") || "[]"));
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
 
   const data = sampleChartData(activities);
   const totalCO2 = activities.reduce((s, a) => s + Number(a.co2 || 0), 0);
@@ -111,7 +123,11 @@ export default function Dashboard() {
 
   function addActivity(a) {
     setActivities((prev) => [a, ...prev]);
+    if (onCelebrate && a.co2) {
+      onCelebrate.celebrateCO2Save(a.co2);
+    }
   }
+
   function deleteActivity(index) {
     const a = activities[index];
     const title = a?.title ? `${a.title}` : "this activity";

@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+"use client";
+
+import { useEffect, useState } from "react";
 import SplitCOI from "../components/SplitCOI";
 import styled from "styled-components";
 
@@ -15,7 +17,7 @@ const HeaderCard = styled.div`
   justify-content: space-between;
 `;
 
-export default function Groups() {
+export default function Groups({ onCelebrate }) {
   const [activities, setActivities] = useState(() =>
     JSON.parse(localStorage.getItem("sc_activities") || "[]")
   );
@@ -42,7 +44,6 @@ export default function Groups() {
           <button
             className="primary"
             onClick={() => {
-              // Focus behavior delegated to the SplitCOI 'Create group' button in that component
               const btn = document.querySelector("button.primary");
               btn?.scrollIntoView({ behavior: "smooth", block: "center" });
               btn?.focus();
@@ -54,7 +55,7 @@ export default function Groups() {
       </HeaderCard>
 
       <div style={{ marginTop: 18 }}>
-        <SplitCOI activities={activities} />
+        <SplitCOI activities={activities} onCelebrate={onCelebrate} />
       </div>
     </Page>
   );

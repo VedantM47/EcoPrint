@@ -5,27 +5,27 @@ export const spacing = (n) => `${n * 8}px`
 export const lightTheme = {
   bg: "#FAFBF7",
   surface: "rgba(255,254,250,0.95)",
-  primary: "#1B5E3F",
-  secondary: "#2D9D7B",
-  accent: "#E8B04B",
+  primary: "#D4A017",
+  secondary: "#E8B04B",
+  accent: "#F5C842",
   text: "#1A1A1A",
   muted: "#6B7280",
   glass: "rgba(255,255,255,0.85)",
-  cardShadow: "0 4px 20px rgba(27,94,63,0.08)",
-  borderColor: "rgba(27,94,63,0.1)",
+  cardShadow: "0 4px 20px rgba(212,160,23,0.08)",
+  borderColor: "rgba(212,160,23,0.1)",
 }
 
 export const darkTheme = {
   bg: "#0F1419",
   surface: "rgba(20,28,24,0.8)",
-  primary: "#4ADB8B",
-  secondary: "#2D9D7B",
-  accent: "#F5D76E",
+  primary: "#E8B04B",
+  secondary: "#D4A017",
+  accent: "#F5C842",
   text: "#F5F5F5",
   muted: "#A0A0A0",
   glass: "rgba(30,40,35,0.6)",
-  cardShadow: "0 8px 32px rgba(74,219,139,0.12)",
-  borderColor: "rgba(74,219,139,0.15)",
+  cardShadow: "0 8px 32px rgba(232,176,75,0.12)",
+  borderColor: "rgba(232,176,75,0.15)",
 }
 
 export const GlobalStyles = createGlobalStyle`
@@ -59,3 +59,5 @@ export const GlobalStyles = createGlobalStyle`
   /* Utility */
   .container { max-width: 1100px; margin: 28px auto; padding: 0 20px; }
 `
+
+export default lightTheme

@@ -78,12 +78,66 @@ export default function Sidebar() {
           </svg>
         </IconBtn>
 
-        <IconBtn to="#" title="Analytics">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <path d="M3 3v18h18" stroke="currentColor" strokeWidth="1.6" />
-            <path
-              d="M7 13v6M12 7v12M17 10v9"
-              stroke="currentColor"
+        <IconBtn to="/leaderboard" title="Leaderboard">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M16 11V3H8v6H2v12h20V11h-6zM10 5h4v14h-4V5zM4 11h4v8H4v-8zm16 8h-4v-6h4v6z" />
+          </svg>
+        </IconBtn>
+
+        <IconBtn to="/calculator" title="CO₂ Calculator">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+          >
+            <rect x="4" y="2" width="16" height="20" rx="2" strokeWidth="1.6" />
+            <line
+              x1="8"
+              y1="6"
+              x2="16"
+              y2="6"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+            />
+            <line
+              x1="8"
+              y1="10"
+              x2="16"
+              y2="10"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+            />
+            <line
+              x1="8"
+              y1="14"
+              x2="10"
+              y2="14"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+            />
+            <line
+              x1="8"
+              y1="18"
+              x2="10"
+              y2="18"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+            />
+            <line
+              x1="14"
+              y1="14"
+              x2="16"
+              y2="14"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+            />
+            <line
+              x1="14"
+              y1="18"
+              x2="16"
+              y2="18"
               strokeWidth="1.6"
               strokeLinecap="round"
             />
